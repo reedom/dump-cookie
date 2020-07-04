@@ -17,6 +17,7 @@ export default class CookieReader {
       '--no-first-run',
       '--no-default-browser-check',
       `--user-data-dir=${tmpdir}`,
+      '--window-size=1200,768',
     ]);
 
     this.child.stderr!.on('data', data => {
@@ -34,7 +35,7 @@ export default class CookieReader {
   }
 
   async _connectPuppeteer(browserWSEndpoint) {
-    this.browser = await puppeteer.connect({ browserWSEndpoint });
+    this.browser = await puppeteer.connect({ browserWSEndpoint, defaultViewport: null });
     this.page = await this.browser.newPage();
   }
 
