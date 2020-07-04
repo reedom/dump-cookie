@@ -1,20 +1,25 @@
-const puppeteer = require('puppeteer');
-const rmdir = require('rimraf');
-const tempy = require('tempy');
+import puppeteer, { Browser, Page } from 'puppeteer';
+import rmdir from 'rimraf';
+import tempy from 'tempy';
+import { ChildProcess, execFile } from 'child_process';
 
-class CookieReader {
+export default class CookieReader {
+  private child: ChildProcess | null = null;
+  private browser: Browser | null = null;
+  private page: Page | null = null;
+
   async open({
     tmpdir = tempy.directory(),
     chromePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   }) {
-    this.child = require('child_process').execFile(chromePath, [
+    this.child = execFile(chromePath, [
       '--remote-debugging-port=9222',
       '--no-first-run',
       '--no-default-browser-check',
       `--user-data-dir=${tmpdir}`,
     ]);
 
-    this.child.stderr.on('data', data => {
+    this.child.stderr!.on('data', data => {
       const m = data.toString().match(/(\bws:.*)/);
       if (m) {
         this._connectPuppeteer(m[1]);
@@ -57,5 +62,3 @@ class CookieReader {
     this.child = null;
   }
 }
-
-module.exports = CookieReader;

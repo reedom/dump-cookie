@@ -1,5 +1,5 @@
-const CookieReader = require('./CookieReader');
-const tempy = require('tempy');
+import CookieReader from './CookieReader';
+import tempy from 'tempy';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
